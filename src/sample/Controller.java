@@ -197,7 +197,7 @@ SpinnerValueFactory.setConverter(doubleConverter);
 
             try{
                 if (from.equals(to)) {
-                    screen.setText("Try again");
+                    screen.setText("Please, enter a valid route!");
                 }else {
                     // screen.setText("Calculate route");
                     screen.setText(trip.getTrip(t, from,to));
@@ -279,14 +279,33 @@ class SelectRoute {
         int f = tranf_f(from);
         int t = tranf_t(to);
 
-        String sql = " SELECT *" +
+        String sql =
+
+                " SELECT * " +
+                " FROM Arrivals AS start" +
+                " JOIN Arrivals AS finish ON start.trainID = finish.trainID " +
+                " INNER JOIN" +
+                "       Trains ON Trains.trainID = start.trainID"+
+                " WHERE start.arrivalTime >= ? AND " +
+                "       start.arrivalTime < finish.arrivalTime AND " +
+                "       start.stationID = ? AND " +
+                "       finish.stationID = ?" +
+                " ORDER BY start.arrivalTime";
+
+
+
+             /*   " SELECT *" +
                 "  FROM Arrivals AS start" +
                 " JOIN Arrivals AS finish ON start.trainID = finish.trainID " +
                 " WHERE start.arrivalTime >= ? AND " +
                 "       start.arrivalTime < finish.arrivalTime AND " +
                 "       start.stationID = ? AND " +
                 "       finish.stationID = ?" +
-                " ORDER BY arrivalTime";
+                " ORDER BY arrivalTime"; */
+
+
+
+
 
         //  "  JOIN Trains ON Trains.trainID = Arrivals.trainID " +
         // "  JOIN Stations ON Stations.stationID = Arrivals.stationID" ;
@@ -318,7 +337,7 @@ class SelectRoute {
                 // String r= rs.getString("trainID");
 
                //r= "TrainID: " + rs.getString("trainID") + "\t" +  " /Departure Time:" + rs.getDouble("arrivalTime") + "\t";
-                rAr.add("TrainID: " + rs.getString("trainID") + " --> " + "Departure Time:" + rs.getDouble("arrivalTime") + "." );
+                rAr.add("Train Code: " + rs.getString("trainCode") + " --> " + "Departure Time: " + rs.getDouble("arrivalTime") + "." );
 
                /* System.out.println(
                         "TrainID: " +
